@@ -1,1 +1,0 @@
-# seylor-mooshka.github.io
