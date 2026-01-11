@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 :root {
   --color-bg: #f8f4f0;          /* тёплый бежевый */
   --color-text: #3a3226;        /* тёмно-коричневый */
@@ -54,4 +55,62 @@ body {
 
 .skip-link a:focus {
   top: 1rem;
+=======
+:root {
+  --color-bg: #f8f4f0;          /* тёплый бежевый */
+  --color-text: #3a3226;        /* тёмно-коричневый */
+  --color-accent: #8b7355;      /* натуральный бежево-серый */
+  --color-sakura: #e8c3b9;      /* нежно-розовый */
+  --color-forest: #5d6d5c;      /* зелено-серый */
+  --spacing-sm: 0.75rem;
+  --spacing-md: 1.5rem;
+  --spacing-lg: 2.5rem;
+  --border-radius: 6px;
+  --transition: 0.25s ease;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Noto Serif', serif; /* или system-ui, если шрифты не подключены */
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.7;
+}
+
+.container {
+  width: min(90%, 1100px);
+  margin-inline: auto;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+.skip-link a {
+  position: absolute;
+  top: -2rem;
+  left: 1rem;
+  background: var(--color-forest);
+  color: white;
+  padding: 0.5rem 1rem;
+  text-decoration: none;
+  z-index: 1000;
+  border-radius: 4px;
+}
+
+.skip-link a:focus {
+  top: 1rem;
+>>>>>>> d20eb05c8fc5567c74df9d547190aaf4f898cb42
 }

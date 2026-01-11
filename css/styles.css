@@ -1,6 +1,14 @@
+<<<<<<< HEAD
 @import url('./base.css');
 @import url('./layout.css');
 @import url('./components/gallery.css');
 @import url('./components/modal.css');
 @import url('./components/nav-tabs.css');
+=======
+@import url('./base.css');
+@import url('./layout.css');
+@import url('./components/gallery.css');
+@import url('./components/modal.css');
+@import url('./components/nav-tabs.css');
+>>>>>>> d20eb05c8fc5567c74df9d547190aaf4f898cb42
 @import url('./components/filters.css');

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -44,4 +45,52 @@
   border-radius: var(--border-radius);
   max-width: 700px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+=======
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(248, 244, 240, 0.96);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+
+.modal-overlay.is-open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.modal-content {
+  max-width: 95vw;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.modal-image {
+  width: 100%;
+  height: auto;
+  max-height: 70vh;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+
+.modal-caption {
+  margin-top: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: white;
+  color: var(--color-forest);
+  text-align: center;
+  font-size: 1.2rem;
+  font-style: italic;
+  border-radius: var(--border-radius);
+  max-width: 700px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+>>>>>>> d20eb05c8fc5567c74df9d547190aaf4f898cb42
 }
