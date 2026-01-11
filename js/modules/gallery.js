@@ -9,7 +9,7 @@ export class Gallery {
       this.container.innerHTML = '<p class="no-results">Ничего не найдено. Попробуйте другой фильтр.</p>';
       return;
     }
-    items.forEach((item, index) => {
+    items.forEach(item => {
       const figure = document.createElement('figure');
       figure.className = 'gallery-item';
       figure.setAttribute('tabindex', '0');
@@ -23,7 +23,7 @@ export class Gallery {
       img.loading = 'lazy';
 
       const figcaption = document.createElement('figcaption');
-      figcaption.textContent = item.title || item.caption.split('—')[0].trim();
+      figcaption.textContent = item.title;
       figcaption.className = 'gallery-title';
 
       figure.appendChild(img);

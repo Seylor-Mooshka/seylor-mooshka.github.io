@@ -3,7 +3,7 @@ import { Modal } from './modules/Modal.js';
 import { Tabs } from './modules/Tabs.js';
 import { Filters } from './modules/Filters.js';
 
-// Данные
+// Данные галереи
 const galleryData = [
   {
     src: 'images/sakura.jpg',
@@ -63,16 +63,13 @@ const galleryData = [
   }
 ];
 
-// Инициализация после загрузки DOM
 document.addEventListener('DOMContentLoaded', () => {
   const galleryEl = document.getElementById('gallery');
   const modalRoot = document.getElementById('modal-root');
 
-  // Создаём экземпляры
   const gallery = new Gallery(galleryEl);
   const modal = new Modal(modalRoot);
 
-  // Функция фильтрации (теперь внутри области видимости!)
   function filterGallery(season, type) {
     const filtered = galleryData.filter(item => {
       const seasonMatch = season === 'all' || item.season === season || item.season === 'all';
@@ -82,24 +79,20 @@ document.addEventListener('DOMContentLoaded', () => {
     gallery.render(filtered);
   }
 
-  // Инициализация вкладок
   const tabButtons = document.querySelectorAll('.tab-button');
   const tabs = new Tabs(tabButtons, (season) => {
     const activeFilter = document.querySelector('.filter-btn.active').dataset.type;
     filterGallery(season, activeFilter);
   });
 
-  // Инициализация фильтров
   const filterButtons = document.querySelectorAll('.filter-btn');
   const filters = new Filters(filterButtons, (type) => {
     const activeSeason = document.querySelector('.tab-button.active').dataset.season;
     filterGallery(activeSeason, type);
   });
 
-  // Первичный рендер
   filterGallery('all', 'all');
 
-  // Обработка открытия модального окна
   document.addEventListener('gallery:select', (e) => {
     modal.open(e.detail);
   });

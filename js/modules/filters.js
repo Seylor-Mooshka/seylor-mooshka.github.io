@@ -21,4 +21,4 @@ export class Filters {
     if (activeBtn) activeBtn.classList.add('active');
     this.currentType = type;
   }
-} 
+}
