@@ -1,0 +1,31 @@
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0 var(--spacing-md) var(--spacing-md);
+  align-items: center;
+  justify-content: center;
+}
+
+.filters-label {
+  font-weight: bold;
+  margin-right: 0.5rem;
+  color: var(--color-forest);
+}
+
+.filter-btn {
+  padding: 0.4rem 0.9rem;
+  background: #f0ebe5;
+  border: 1px solid #d5cfc2;
+  border-radius: 20px;
+  color: var(--color-text);
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+.filter-btn:hover,
+.filter-btn.active {
+  background: var(--color-forest);
+  color: white;
+  border-color: var(--color-forest);
+}

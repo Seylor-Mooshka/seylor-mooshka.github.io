@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Путешествие по природе Японии: сакура, гора Фудзи, дзен-сады и четыре сезона." />
+  <title>Япония. Природа сквозь времена года</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <div class="skip-link">
+    <a href="#main-content">Перейти к содержанию</a>
+  </div>
+
+  <header class="page-header" role="banner">
+    <div class="container">
+      <h1>Япония. Природа сквозь времена года</h1>
+      <p class="header-subtitle">От цветения сакуры до снежных вершин Фудзи</p>
+    </div>
+  </header>
+
+  <main id="main-content" role="main">
+    <!-- Вкладки по сезонам -->
+    <nav class="season-tabs" role="tablist" aria-label="Выбор времени года">
+      <button class="tab-button active" data-season="all">Все сезоны</button>
+      <button class="tab-button" data-season="spring">Весна</button>
+      <button class="tab-button" data-season="summer">Лето</button>
+      <button class="tab-button" data-season="autumn">Осень</button>
+      <button class="tab-button" data-season="winter">Зима</button>
+    </nav>
+
+    <!-- Фильтры по типу -->
+    <div class="filters" role="group" aria-labelledby="filters-label">
+      <span id="filters-label" class="filters-label">Фильтр:</span>
+      <button class="filter-btn active" data-type="all">Все</button>
+      <button class="filter-btn" data-type="sakura">Сакура</button>
+      <button class="filter-btn" data-type="mountain">Горы</button>
+      <button class="filter-btn" data-type="forest">Леса</button>
+      <button class="filter-btn" data-type="water">Водоёмы</button>
+      <button class="filter-btn" data-type="garden">Сады</button>
+    </div>
+
+    <!-- Галерея -->
+    <section class="gallery-section" aria-labelledby="gallery-heading">
+      <h2 id="gallery-heading" class="visually-hidden">Фотогалерея природы Японии</h2>
+      <div class="gallery" id="gallery"></div>
+    </section>
+  </main>
+
+  <!-- Модальное окно -->
+  <div id="modal-root" aria-live="polite"></div>
+
+  <footer class="page-footer">
+    <div class="container">
+      <p>© 2026 Япония. Природа в тишине. Вдохновлено эстетикой ваби-саби.</p>
+    </div>
+  </footer>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
