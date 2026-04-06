@@ -1,61 +1,901 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Путешествие по природе Японии: сакура, гора Фудзи, дзен-сады и четыре сезона." />
-  <title>Япония. Природа сквозь времена года</title>
-  <link rel="stylesheet" href="css/styles.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Game Designer and Developer Portfolio">
+  <title>GAME DESIGNER • Portfolio</title>
+  
+  <!-- FAVICON  -->
+  <link rel="icon" type="image/svg+xml" href="image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' shape-rendering='crispEdges'><rect x='2' y='5' width='12' height='6' fill='%234ecdc4'/><rect x='3' y='4' width='10' height='8' fill='%231a1a3a'/><rect x='6' y='7' width='4' height='2' fill='%23ff6b6b'/><rect x='5' y='8' width='2' height='1' fill='%230a0a18'/><rect x='9' y='8' width='2' height='1' fill='%230a0a18'/></svg>">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-base: #0a0a18;
+      --bg-secondary: #1a1a3a;
+      --text-main: #e8e8ff;
+      --text-dim: #b0b0d0;
+      --text-bright: #ffffff;
+      --accent-red: #ff6b6b;
+      --accent-cyan: #4ecdc4;
+      --accent-yellow: #ffd93d;
+      --border-light: #ffffff;
+      --scanline: rgba(18, 16, 16, 0.15);
+      --glow: 0 0 12px rgba(78, 205, 196, 0.6);
+      --radius: 6px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    
+    body {
+      font-family: 'VT323', monospace;
+      color: var(--text-main);
+      line-height: 1.6;
+      font-size: 1.2rem;
+      overflow-x: hidden;
+      position: relative;
+      background: 
+        radial-gradient(ellipse at 15% 20%, rgba(78, 205, 196, 0.12) 0%, transparent 55%),
+        radial-gradient(ellipse at 85% 80%, rgba(255, 107, 107, 0.09) 0%, transparent 55%),
+        linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+        linear-gradient(160deg, #080814 0%, #0f0f23 45%, #151530 100%);
+      background-size: 100% 100%, 100% 100%, 44px 44px, 44px 44px, 100% 100%;
+      background-attachment: fixed;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      top: -10%; left: -10%;
+      width: 120%; height: 120%;
+      background: radial-gradient(ellipse at 30% 70%, rgba(78, 205, 196, 0.08) 0%, transparent 60%);
+      z-index: -1;
+      animation: ambientPulse 12s ease-in-out infinite alternate;
+      pointer-events: none;
+    }
+    @keyframes ambientPulse {
+      0% { opacity: 0.6; transform: scale(1); }
+      100% { opacity: 1; transform: scale(1.04); }
+    }
+
+    .crt-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none;
+      background: 
+        repeating-linear-gradient(to bottom, transparent, transparent 2px, var(--scanline) 2px, var(--scanline) 4px),
+        repeating-linear-gradient(to right, rgba(255,0,0,0.02) 0px, rgba(0,255,0,0.02) 2px, rgba(0,0,255,0.02) 4px, rgba(255,0,0,0.02) 6px);
+      animation: flicker 0.15s infinite alternate;
+      z-index: 9999;
+      mix-blend-mode: multiply;
+    }
+    @keyframes flicker { 0% { opacity: 0.96; } 100% { opacity: 1; } }
+
+    .glitch { position: relative; animation: glitch 4s infinite; }
+    @keyframes glitch {
+      0%, 85%, 100% { text-shadow: none; }
+      87% { text-shadow: 2px 0 var(--accent-red), -2px 0 var(--accent-cyan); }
+      89% { text-shadow: -2px 0 var(--accent-red), 2px 0 var(--accent-cyan); }
+    }
+
+    nav {
+      position: fixed; top: 0; width: 100%;
+      padding: 1rem 2rem;
+      background: rgba(10, 10, 24, 0.92);
+      border-bottom: 3px solid rgba(255,255,255,0.3);
+      display: flex; justify-content: center; gap: 1.5rem;
+      z-index: 1000;
+      font-family: 'Press Start 2P', cursive;
+      font-size: 0.7rem;
+      backdrop-filter: blur(6px);
+    }
+    nav a {
+      color: var(--text-main); text-decoration: none;
+      padding: 0.5rem 1rem; border: 2px solid transparent;
+      transition: all 0.2s;
+    }
+    nav a:hover, nav a.active {
+      border-color: var(--accent-cyan); color: var(--accent-cyan);
+      box-shadow: var(--glow); transform: translateY(-2px);
+    }
+
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      justify-content: center; align-items: center;
+      text-align: center; padding: 2rem;
+      position: relative;
+    }
+    .hero h1 {
+      font-family: 'Press Start 2P', cursive;
+      font-size: clamp(1.8rem, 5vw, 3rem);
+      margin-bottom: 1rem; line-height: 1.4;
+      text-transform: uppercase;
+    }
+    .hero p {
+      max-width: 650px; margin-bottom: 2.5rem;
+      color: var(--text-dim); font-size: 1.5rem;
+    }
+    .start-btn {
+      font-family: 'Press Start 2P', cursive; font-size: 0.85rem;
+      padding: 1rem 2rem; background: var(--accent-red);
+      color: white; border: 4px solid var(--border-light);
+      cursor: pointer; transition: all 0.2s;
+      text-decoration: none; display: inline-block;
+    }
+    .start-btn:hover {
+      background: var(--accent-cyan); transform: translateY(-3px);
+      box-shadow: var(--glow); color: #000;
+    }
+
+    .section { padding: 5rem 2rem; max-width: 1200px; margin: 0 auto; }
+    .section-title {
+      font-family: 'Press Start 2P', cursive; font-size: clamp(1.2rem, 3vw, 1.8rem);
+      margin-bottom: 2.5rem; text-align: center;
+      border-bottom: 4px solid var(--accent-yellow);
+      padding-bottom: 1rem; display: inline-block; width: 100%;
+    }
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem; margin-top: 1rem;
+    }
+    .game-card {
+      background: rgba(26, 26, 58, 0.85);
+      border: 3px solid rgba(255,255,255,0.4);
+      border-radius: var(--radius); overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+      display: flex; flex-direction: column;
+      backdrop-filter: blur(4px);
+    }
+    .game-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 8px 0 var(--accent-red), var(--glow);
+      border-color: var(--accent-cyan);
+    }
+    .card-image {
+      width: 100%; height: 180px;
+      background: linear-gradient(135deg, #1e1e3a, #2a2a5a);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Press Start 2P', cursive; font-size: 0.8rem;
+      color: var(--text-dim); border-bottom: 3px solid rgba(255,255,255,0.3);
+      image-rendering: pixelated;
+      position: relative;
+      overflow: hidden;
+    }
+    .card-image img { width: 100%; height: 100%; object-fit: cover; image-rendering: pixelated; }
+    .card-content { padding: 1.2rem; flex: 1; display: flex; flex-direction: column; }
+    .card-content h3 {
+      font-family: 'Press Start 2P', cursive; font-size: 0.9rem;
+      margin-bottom: 0.5rem; color: var(--accent-cyan);
+    }
+    .card-meta { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 0.8rem; }
+    .card-meta span {
+      background: rgba(78, 205, 196, 0.2); border: 2px solid var(--accent-cyan);
+      padding: 0.15rem 0.4rem; font-size: 1rem; color: var(--text-bright);
+    }
+    .card-desc { color: var(--text-dim); margin-bottom: 1rem; flex: 1; font-size: 1.25rem; }
+    .play-btn {
+      font-family: 'Press Start 2P', cursive; font-size: 0.7rem;
+      padding: 0.6rem 1rem; background: var(--accent-yellow);
+      color: #000; border: 2px solid var(--border-light);
+      cursor: pointer; transition: all 0.2s; align-self: flex-start;
+    }
+    .play-btn:hover { background: var(--accent-cyan); color: white; }
+
+    .about-content {
+      display: grid; grid-template-columns: 150px 1fr;
+      gap: 2rem; align-items: start;
+    }
+    .avatar-frame {
+      width: 150px; height: 150px; border: 3px solid rgba(255,255,255,0.4);
+      background: rgba(26, 26, 58, 0.7); border-radius: var(--radius);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Press Start 2P', cursive; font-size: 0.6rem;
+      text-align: center; padding: 1rem; backdrop-filter: blur(4px);
+    }
+    .avatar-frame img { width: 100%; height: 100%; object-fit: cover; border-radius: 2px; }
+    .skills-list { list-style: none; margin-top: 1rem; }
+    .skills-list li { margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.8rem; }
+    .skill-bar {
+      flex: 1; height: 14px; background: rgba(10, 10, 24, 0.8);
+      border: 2px solid rgba(255,255,255,0.3); border-radius: 4px; overflow: hidden;
+    }
+    .skill-fill {
+      height: 100%; background: var(--accent-cyan);
+      width: 0%; transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Passive Skills (Soft Skills) */
+    .passive-skills {
+      margin-top: 2rem;
+      padding: 1rem;
+      background: rgba(26, 26, 58, 0.5);
+      border: 2px dashed var(--accent-yellow);
+      border-radius: var(--radius);
+    }
+    .passive-skills h4 {
+      font-family: 'Press Start 2P', cursive; font-size: 0.8rem;
+      color: var(--accent-yellow); margin-bottom: 0.8rem;
+      border-bottom: 2px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem;
+    }
+    .passive-list {
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 0.5rem;
+    }
+    .passive-list li {
+      display: flex; align-items: center; gap: 0.5rem;
+      font-size: 1.1rem; color: var(--text-main);
+    }
+    .passive-list li::before {
+      content: '✦'; color: var(--accent-cyan);
+    }
+
+    /* CLASS TRAIT (Metaphor) */
+    .class-trait {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: linear-gradient(145deg, rgba(255, 107, 107, 0.1), rgba(26, 26, 58, 0.9));
+  border: 3px solid var(--accent-red);
+  border-radius: var(--radius);
+  position: relative;
+  box-shadow: 0 0 20px rgba(255, 107, 107, 0.2);
+}
+
+.class-trait::before {
+  content: '🎭';
+  position: absolute;
+  top: -15px; 
+  left: 1.5rem;
+  background: var(--bg-base);
+  padding: 0 0.8rem;
+  font-size: 1.4rem;
+  border: 2px solid var(--accent-red);
+  border-radius: 4px;
+}
+
+.class-trait h4 {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.85rem;
+  color: var(--accent-red);
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-top: 0.5rem;
+}
+
+.class-trait p {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: var(--text-bright);
+  margin: 0;
+}
+
+.class-trait p strong {
+  color: var(--accent-cyan);
+  font-weight: bold;
+}
+
+/* Адаптивность для мобильных */
+@media (max-width: 768px) {
+  .class-trait {
+    padding: 1.2rem;
+    margin-top: 1.5rem;
+  }
+  
+  .class-trait p {
+    font-size: 1rem;
+    line-height: 1.7;
+  }
+  
+  .class-trait::before {
+    font-size: 1.2rem;
+    top: -12px;
+  }
+}
+
+    .contact-form {
+      max-width: 600px; margin: 0 auto; background: rgba(26, 26, 58, 0.8);
+      padding: 2rem; border: 3px solid rgba(255,255,255,0.4); border-radius: var(--radius);
+      backdrop-filter: blur(4px);
+    }
+    .form-group { margin-bottom: 1.5rem; }
+    .form-group label {
+      display: block; margin-bottom: 0.5rem;
+      font-family: 'Press Start 2P', cursive; font-size: 0.75rem; color: var(--text-bright);
+    }
+    .form-group input, .form-group textarea {
+      width: 100%; padding: 0.8rem; background: rgba(10, 10, 24, 0.9);
+      border: 2px solid rgba(255,255,255,0.3); color: var(--text-bright);
+      font-family: 'VT323', monospace; font-size: 1.1rem; border-radius: 4px;
+    }
+    .form-group input:focus, .form-group textarea:focus {
+      outline: none; border-color: var(--accent-cyan); box-shadow: var(--glow);
+    }
+    .submit-btn {
+      font-family: 'Press Start 2P', cursive; font-size: 0.85rem;
+      padding: 1rem 2rem; background: var(--accent-cyan); color: #000;
+      border: 3px solid var(--border-light); cursor: pointer;
+      transition: all 0.2s; width: 100%; border-radius: 4px;
+    }
+    .submit-btn:hover { background: var(--accent-yellow); transform: translateY(-2px); }
+
+    /* MODAL */
+    .modal-backdrop {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(5, 5, 15, 0.88); z-index: 9998;
+      opacity: 0; visibility: hidden; transition: all 0.25s ease;
+      backdrop-filter: blur(4px);
+    }
+    .modal-backdrop.active { opacity: 1; visibility: visible; }
+
+    .retro-modal {
+      position: fixed; top: 50%; left: 50%;
+      transform: translate(-50%, -50%) scale(0.92);
+      width: 92%; max-width: 750px; max-height: 90vh;
+      overflow-y: auto; 
+      background: linear-gradient(145deg, #1a1a3a 0%, #141428 100%);
+      border: 3px solid var(--accent-cyan); 
+      border-radius: var(--radius);
+      padding: 0; z-index: 9999; opacity: 0; visibility: hidden;
+      transition: all 0.25s ease; outline: none; 
+      box-shadow: 0 0 30px rgba(78, 205, 196, 0.3), inset 0 0 60px rgba(0,0,0,0.3);
+    }
+    .retro-modal[open] { opacity: 1; visibility: visible; transform: translate(-50%, -50%) scale(1); }
+    .retro-modal::backdrop { background: transparent; }
+
+    .modal-content { position: relative; padding: 2rem; color: var(--text-bright); }
+    
+    .modal-close {
+      position: absolute; top: 1rem; right: 1rem;
+      font-family: 'Press Start 2P', cursive; font-size: 0.9rem;
+      background: var(--accent-red); color: white;
+      border: 2px solid var(--border-light); width: 32px; height: 32px;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s; z-index: 10; border-radius: 4px;
+    }
+    .modal-close:hover { background: #ff4444; transform: scale(1.1); }
+
+    .modal-header { 
+      margin-bottom: 1.5rem; padding-bottom: 1rem; 
+      border-bottom: 3px dashed var(--accent-yellow); 
+    }
+    .modal-header h3 { 
+      font-family: 'Press Start 2P', cursive; 
+      font-size: 1.1rem; 
+      color: var(--accent-cyan); 
+      margin-bottom: 0.6rem;
+      text-shadow: 0 0 10px rgba(78, 205, 196, 0.5);
+    }
+    .modal-header .card-meta span {
+      background: rgba(78, 205, 196, 0.25); 
+      border: 2px solid var(--accent-cyan);
+      padding: 0.2rem 0.5rem; 
+      font-size: 1rem; 
+      color: var(--text-bright);
+      font-weight: bold;
+    }
+    
+    .modal-image {
+      width: 100%; height: 300px; 
+      background: linear-gradient(135deg, #1e1e3a, #2a2a5a);
+      border: 2px solid var(--accent-cyan); 
+      margin-bottom: 1.5rem;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Press Start 2P', cursive; font-size: 0.8rem; 
+      color: var(--text-dim);
+      border-radius: 4px; image-rendering: pixelated;
+      overflow: hidden;
+    }
+    .modal-image img { width: 100%; height: 100%; object-fit: cover; }
+
+    .modal-body { color: var(--text-bright); }
+    .modal-body p {
+      color: var(--text-bright);
+      font-size: 1.25rem;
+      line-height: 1.7;
+      margin-bottom: 1rem;
+    }
+    .modal-body h4 { 
+      font-family: 'Press Start 2P', cursive; 
+      font-size: 0.8rem; 
+      margin: 1.5rem 0 0.8rem; 
+      color: var(--accent-yellow);
+      text-shadow: 0 0 8px rgba(255, 217, 61, 0.4);
+    }
+    .tech-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
+    .tech-tags span { 
+      background: rgba(78, 205, 196, 0.2); 
+      border: 2px solid var(--accent-cyan); 
+      padding: 0.3rem 0.6rem; 
+      font-size: 1.05rem;
+      color: var(--text-bright);
+      font-weight: bold;
+    }
+    
+    .modal-links { 
+      display: flex; flex-wrap: wrap; gap: 0.8rem; 
+      margin-top: 1.5rem; padding-top: 1rem; 
+      border-top: 3px dashed var(--accent-yellow); 
+    }
+    .modal-links a {
+      font-family: 'Press Start 2P', cursive; font-size: 0.7rem;
+      padding: 0.6rem 1rem; background: rgba(10, 10, 24, 0.8); 
+      color: var(--text-bright);
+      border: 2px solid var(--accent-cyan); text-decoration: none; 
+      transition: all 0.2s; border-radius: 4px;
+    }
+    .modal-links a:hover { 
+      background: var(--accent-cyan); 
+      color: #000; 
+      box-shadow: var(--glow); 
+    }
+
+    /* Navigation Buttons */
+    .modal-nav {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 1.5rem;
+      padding-top: 1rem;
+      border-top: 3px dashed var(--accent-yellow);
+    }
+    .nav-btn {
+      font-family: 'Press Start 2P', cursive;
+      font-size: 0.7rem;
+      padding: 0.6rem 1.2rem;
+      background: rgba(10, 10, 24, 0.8);
+      color: var(--text-bright);
+      border: 2px solid var(--accent-cyan);
+      cursor: pointer;
+      transition: all 0.2s;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .nav-btn:hover {
+      background: var(--accent-cyan);
+      color: #000;
+      box-shadow: var(--glow);
+    }
+    .nav-btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+      border-color: var(--text-dim);
+    }
+    .nav-btn:disabled:hover {
+      background: rgba(10, 10, 24, 0.8);
+      color: var(--text-bright);
+      box-shadow: none;
+    }
+
+    .project-counter {
+      font-family: 'Press Start 2P', cursive;
+      font-size: 0.7rem;
+      color: var(--accent-yellow);
+      display: flex;
+      align-items: center;
+      padding: 0.6rem 1rem;
+    }
+
+    .retro-modal::-webkit-scrollbar { width: 10px; }
+    .retro-modal::-webkit-scrollbar-track { background: rgba(10, 10, 24, 0.9); border: 2px solid rgba(78,205,196,0.3); }
+    .retro-modal::-webkit-scrollbar-thumb { background: var(--accent-cyan); border: 2px solid var(--bg-base); border-radius: 6px; }
+
+    footer {
+      text-align: center; padding: 2.5rem 1rem;
+      border-top: 3px solid rgba(255,255,255,0.3);
+      font-family: 'Press Start 2P', cursive; font-size: 0.65rem; color: var(--text-dim);
+      background: rgba(10, 10, 24, 0.6);
+    }
+    .social-links { display: flex; justify-content: center; gap: 1rem; margin-top: 1rem; flex-wrap: wrap; }
+    .social-links a { 
+      color: var(--accent-cyan); text-decoration: none; 
+      border: 2px solid transparent; padding: 0.3rem 0.6rem; 
+      transition: all 0.2s; font-size: 0.7rem;
+    }
+    .social-links a:hover { border-color: var(--accent-cyan); box-shadow: var(--glow); }
+
+    @media (max-width: 768px) {
+      nav { flex-wrap: wrap; gap: 0.5rem; padding: 0.8rem; font-size: 0.6rem; }
+      .about-content { grid-template-columns: 1fr; text-align: center; }
+      .avatar-frame { margin: 0 auto 1.5rem; }
+      .modal-links, .modal-nav { flex-direction: column; }
+      .modal-links a, .nav-btn { width: 100%; text-align: center; justify-content: center; }
+      .project-counter { justify-content: center; }
+      body { background-attachment: scroll; }
+      .modal-content { padding: 1.5rem 1rem; }
+      .modal-image { height: 220px; }
+      .passive-list { grid-template-columns: 1fr; text-align: left; }
+      .class-trait p { font-size: 1.05rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+      .crt-overlay, body::after { display: none; }
+    }
+  </style>
 </head>
 <body>
-  <div class="skip-link">
-    <a href="#main-content">Перейти к содержанию</a>
-  </div>
 
-  <header class="page-header" role="banner">
-    <div class="container">
-      <h1>Япония. Природа сквозь времена года</h1>
-      <p class="header-subtitle">От цветения сакуры до снежных вершин Фудзи</p>
-    </div>
-  </header>
+  <div class="crt-overlay"></div>
 
-  <main id="main-content" role="main">
-    <!-- Вкладки по сезонам -->
-    <nav class="season-tabs" role="tablist" aria-label="Выбор времени года">
-      <button class="tab-button active" data-season="all">Все сезоны</button>
-      <button class="tab-button" data-season="spring">Весна</button>
-      <button class="tab-button" data-season="summer">Лето</button>
-      <button class="tab-button" data-season="autumn">Осень</button>
-      <button class="tab-button" data-season="winter">Зима</button>
-    </nav>
+  <nav>
+    <a href="#home" class="active">START</a>
+    <a href="#projects">QUESTS</a>
+    <a href="#about">PLAYER</a>
+    <a href="#contact">SAVE & QUIT</a>
+  </nav>
 
-    <!-- Фильтры по типу -->
-    <div class="filters" role="group" aria-labelledby="filters-label">
-      <span id="filters-label" class="filters-label">Фильтр:</span>
-      <button class="filter-btn active" data-type="all">Все</button>
-      <button class="filter-btn" data-type="sakura">Сакура</button>
-      <button class="filter-btn" data-type="mountain">Горы</button>
-      <button class="filter-btn" data-type="forest">Леса</button>
-      <button class="filter-btn" data-type="water">Водоёмы</button>
-      <button class="filter-btn" data-type="garden">Сады</button>
-    </div>
+  <main>
+    <section id="home" class="hero">
+      <h1 class="glitch">GAME DESIGNER<br>& PROGRAMMER</h1>
+      <p>Mechanics • Balance • Player Psychology • Unity • C#</p>
+      <a href="#projects" class="start-btn">▶ PRESS START</a>
+    </section>
 
-    <!-- Галерея -->
-    <section class="gallery-section" aria-labelledby="gallery-heading">
-      <h2 id="gallery-heading" class="visually-hidden">Фотогалерея природы Японии</h2>
-      <div class="gallery" id="gallery"></div>
+    <section id="projects" class="section">
+      <h2 class="section-title">MY QUESTS</h2>
+      <div class="projects-grid">
+        
+        <!-- 1. Fox Runner -->
+        <article class="game-card">
+          <div class="card-image">
+            <img src="images/fox.jpg" alt="Fox Runner" onerror="this.style.display='none'; this.parentElement.innerHTML='[FOX PREVIEW]';">
+          </div>
+          <div class="card-content">
+            <h3>FOX RUNNER</h3>
+            <div class="card-meta"><span>2023</span><span>C++</span><span>GameLib</span></div>
+            <p class="card-desc">Runner with jumping mechanics and speed bonuses. C++.</p>
+            <button class="play-btn" data-project="1">▶ DETAILS</button>
+          </div>
+        </article>
+
+        <!-- 2. Capybara -->
+        <article class="game-card">
+          <div class="card-image">
+            <img src="images/capybara.jpg" alt="Capybara" onerror="this.style.display='none'; this.parentElement.innerHTML='[CAPYBARA PREVIEW]';">
+          </div>
+          <div class="card-content">
+            <h3>CAPY BARA</h3>
+            <div class="card-meta"><span>2023</span><span>Unity</span><span>Android</span></div>
+            <p class="card-desc">Minimalism for mobile: movement and jumping.</p>
+            <button class="play-btn" data-project="2">▶ DETAILS</button>
+          </div>
+        </article>
+
+        <!-- 3. Ghost Shooter -->
+        <article class="game-card">
+          <div class="card-image">
+            <img src="images/ghost.jpg" alt="Ghost Shooter" onerror="this.style.display='none'; this.parentElement.innerHTML='[GHOST PREVIEW]';">
+          </div>
+          <div class="card-content">
+            <h3>GHOST HUNTER</h3>
+            <div class="card-meta"><span>2024</span><span>Python</span><span>Pixel Art</span></div>
+            <p class="card-desc">Top-down shooter: shooting ghosts, enemy AI.</p>
+            <button class="play-btn" data-project="3">▶ DETAILS</button>
+          </div>
+        </article>
+
+        <!-- 4. Muscle Car -->
+        <article class="game-card">
+          <div class="card-image">
+            <img src="images/car.jpg" alt="Car Demo" onerror="this.style.display='none'; this.parentElement.innerHTML='[CAR PREVIEW]';">
+          </div>
+          <div class="card-content">
+            <h3>DESTRUCTION</h3>
+            <div class="card-meta"><span>2025</span><span>UE4</span><span>Blueprints</span></div>
+            <p class="card-desc">Driving physics and destruction. Unreal Engine 4.</p>
+            <button class="play-btn" data-project="4">▶ DETAILS</button>
+          </div>
+        </article>
+
+        <!-- 5. Stealth -->
+        <article class="game-card">
+          <div class="card-image">
+            <img src="images/stealth.jpg" alt="Stealth WIP" onerror="this.style.display='none'; this.parentElement.innerHTML='[STEALTH PREVIEW]';">
+          </div>
+          <div class="card-content">
+            <h3>STEALTH WIP</h3>
+            <div class="card-meta"><span>2026</span><span>Unity</span><span>In Dev</span></div>
+            <p class="card-desc">Hiding mechanics behind objects and mouse rotation.</p>
+            <button class="play-btn" data-project="5">▶ DETAILS</button>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <section id="about" class="section">
+      <h2 class="section-title">PLAYER STATS</h2>
+      <div class="about-content">
+        <div class="avatar-frame">
+           <img src="images/avatar.jpg" alt="Stealth WIP">
+        </div>
+        <div>
+          <p style="font-size: 1.3rem; margin-bottom: 1rem; color: var(--text-bright);">
+            Hi! I'm Kristina, a game designer and developer. My focus is on creating balanced mechanics and deep analysis of player behavior. I combine technical implementation (C#, Unity, C++, UE4) with a psychological approach to UX.
+          </p>
+          
+          <h3 style="font-family:'Press Start 2P'; font-size:0.9rem; margin:1.5rem 0 0.8rem; color:var(--accent-yellow);">HARD SKILLS</h3>
+          <ul class="skills-list">
+            <li><span>Game Design / GDD</span><div class="skill-bar"><div class="skill-fill" style="width:90%"></div></div></li>
+            <li><span>C# / Unity / C++</span><div class="skill-bar"><div class="skill-fill" style="width:85%"></div></div></li>
+            <li><span>Prototyping & Vertical Slice</span><div class="skill-bar"><div class="skill-fill" style="width:80%"></div></div></li>
+            <li><span>Python / Blueprints</span><div class="skill-bar"><div class="skill-fill" style="width:70%"></div></div></li>
+          </ul>
+
+          <div class="passive-skills">
+            <h4>✨ PASSIVE ABILITIES (SOFT SKILLS)</h4>
+            <ul class="passive-list">
+              <li>Analytical Thinking</li>
+              <li>Player Psychology (UX)</li>
+              <li>Critical Analysis</li>
+              <li>Self-Education</li>
+              <li>Attention to Detail</li>
+            </ul>
+          </div>
+
+          <!-- CLASS TRAIT: Metaphor -->
+          <div class="class-trait">
+            <h4>🎭 Class Trait</h4>
+              <p>
+                If I were to represent my professional image as a metaphor, it would be a <strong>pomegranate</strong>. 
+                On the outside — structure and strictness, inside — many well-thought-out elements 
+                united into a single system. Like pomegranate seeds, my skills form a balanced system 
+                where <strong>analytics, creativity, and technical implementation</strong> combine.
+              </p>
+              <p style="margin-top: 0.8rem; font-style: italic; color: var(--text-dim);">
+                → This forms a competitive advantage in the digital professions market.
+              </p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="section">
+      <h2 class="section-title">NEW GAME+</h2>
+      <form class="contact-form" id="contactForm">
+        <div class="form-group">
+          <label for="name">PLAYER NAME</label>
+          <input type="text" id="name" name="name" required placeholder="Enter your name...">
+        </div>
+        <div class="form-group">
+          <label for="email">SAVE POINT (EMAIL)</label>
+          <input type="email" id="email" name="email" required placeholder="you@example.com">
+        </div>
+        <div class="form-group">
+          <label for="message">QUEST LOG</label>
+          <textarea id="message" name="message" rows="5" required placeholder="Your message..."></textarea>
+        </div>
+        <button type="submit" class="submit-btn">▶ SEND MESSAGE</button>
+      </form>
     </section>
   </main>
 
-  <!-- Модальное окно -->
-  <div id="modal-root" aria-live="polite"></div>
-
-  <footer class="page-footer">
-    <div class="container">
-      <p>© 2026 Япония. Природа в тишине. Вдохновлено эстетикой ваби-саби.</p>
+  <footer>
+    <p>© 2026 RACCON'S DEN • ALL RIGHTS RESERVED</p>
+    <div class="social-links">
+      <a href="https://t.me/gdEnovaSun" target="_blank" rel="noopener">💬 Telegram</a>
+      <a href="https://steamcommunity.com/id/seylor_mooshka/" target="_blank" rel="noopener">🎮 Steam</a>
+      <a href="https://vk.ru/enovafstina" target="_blank" rel="noopener">📱 VK</a>
+      <a href="#" target="_blank" rel="noopener">🎯 Itch.io</a>
     </div>
   </footer>
 
-  <script type="module" src="js/main.js"></script>
+  <div id="modalBackdrop" class="modal-backdrop"></div>
+  <dialog id="projectModal" class="retro-modal">
+    <div class="modal-content">
+      <button class="modal-close" aria-label="Close window">✕</button>
+      <div class="modal-header">
+        <h3 id="modalTitle">PROJECT NAME</h3>
+        <div id="modalMeta" class="card-meta"></div>
+      </div>
+      <div class="modal-body">
+        <div id="modalImage" class="modal-image">[NO IMAGE]</div>
+        <p id="modalDescription">Project description...</p>
+        <h4>🛠️ Technologies</h4>
+        <div id="modalTech" class="tech-tags"></div>
+        <h4>🎯 My Role</h4>
+        <p id="modalRole">Role description...</p>
+        <div class="modal-links">
+          <a id="modalItch" href="#" target="_blank" rel="noopener">🎮 Itch.io</a>
+          <a id="modalVK" href="#" target="_blank" rel="noopener">📱 VK</a>
+          <a id="modalVideo" href="#" target="_blank" rel="noopener">▶ YouTube</a>
+        </div>
+        
+        <!-- Navigation Buttons -->
+        <div class="modal-nav">
+          <button class="nav-btn" id="prevBtn" onclick="navigateProject(-1)">◀ PREV</button>
+          <div class="project-counter" id="projectCounter">1 / 5</div>
+          <button class="nav-btn" id="nextBtn" onclick="navigateProject(1)">NEXT ▶</button>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <script>
+    const projects = {
+      1: { 
+        title: "FOX RUNNER", 
+        meta: ["2023", "C++", "Game Library"], 
+        image: "images/fox.jpg", 
+        desc: "2023 project. Implemented jumping mechanics over obstacles, bonus system for speed increase. Collision handling included. Minimalist design with animation.", 
+        tech: ["C++", "Game Lib", "Animation", "Collision"], 
+        role: "Programming mechanics, design drawing, collision setup.", 
+        links: { itch: "#", vk: "#", video: "#" } 
+      },
+      2: { 
+        title: "CAPY BARA", 
+        meta: ["2023", "Unity", "C#"], 
+        image: "images/capybara.jpg", 
+        desc: "Mobile game for Android (2023). Minimalist 2D design. Implemented movement and jumping mechanics adapted for touch input.", 
+        tech: ["Unity", "C#", "Touch Input", "Android"], 
+        role: "Implementing mobile controls, jump physics setup.", 
+        links: { itch: "#", vk: "#", video: "" } 
+      },
+      3: { 
+        title: "GHOST HUNTER", 
+        meta: ["2024", "Python", "PyGame"], 
+        image: "images/ghost.jpg", 
+        desc: "Top-down shooter (2024). Fully drawn pixel art with animations. Implemented shooting at ghosts, character movement and enemy movement logic.", 
+        tech: ["Python", "Pixel Art", "Enemy AI", "Shooting"], 
+        role: "Full cycle: art, ghost logic code, combat system.", 
+        links: { itch: "#", vk: "#", video: "#" } 
+      },
+      4: { 
+        title: "DESTRUCTION", 
+        meta: ["2025", "Unreal Engine 4", "BP"], 
+        image: "images/car.jpg", 
+        desc: "UE4 demo scene (2025). Built desert location. Added car as game object with driving mechanics and realistic destruction system on collision.", 
+        tech: ["UE4", "Blueprints", "Physics", "Level Design"], 
+        role: "Location building, transport physics and destruction setup.", 
+        links: { itch: "#", vk: "#", video: "#" } 
+      },
+      5: { 
+        title: "STEALTH WIP", 
+        meta: ["2026", "Unity", "C#"], 
+        image: "images/stealth.jpg", 
+        desc: "Project in development (2026). Pixel stealth. Implemented movement mechanics, character rotation following mouse. Complex collision worked out: character can hide behind objects.", 
+        tech: ["Unity", "C#", "Stealth", "Raycasting"], 
+        role: "Stealth mechanics design, cover implementation.", 
+        links: { itch: "#", vk: "#", video: "#" } 
+      }
+    };
+
+    const projectIds = [1, 2, 3, 4, 5];
+    let currentProjectIndex = 0;
+
+    const modal = document.getElementById('projectModal');
+    const backdrop = document.getElementById('modalBackdrop');
+    const closeBtn = document.querySelector('.modal-close');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const counterEl = document.getElementById('projectCounter');
+
+    function openProjectModal(id) {
+      currentProjectIndex = projectIds.indexOf(id);
+      loadProject(id);
+      backdrop.classList.add('active');
+      modal.showModal();
+      document.body.style.overflow = 'hidden';
+      updateNavButtons();
+    }
+
+    function loadProject(id) {
+      const p = projects[id];
+      if (!p) return;
+      
+      document.getElementById('modalTitle').textContent = p.title;
+      document.getElementById('modalMeta').innerHTML = p.meta.map(m => `<span>${m}</span>`).join('');
+      
+      const imgContainer = document.getElementById('modalImage');
+      if (p.image) {
+        imgContainer.innerHTML = `<img src="${p.image}" alt="${p.title}" onerror="this.style.display='none'; this.parentElement.innerHTML='[IMAGE NOT FOUND]';">`;
+      } else {
+        imgContainer.innerHTML = '[NO IMAGE]';
+      }
+      
+      document.getElementById('modalDescription').textContent = p.desc;
+      document.getElementById('modalRole').textContent = p.role;
+      document.getElementById('modalTech').innerHTML = p.tech.map(t => `<span>${t}</span>`).join('');
+      
+      const linkMap = { itch: 'modalItch', vk: 'modalVK', video: 'modalVideo' };
+      Object.entries(linkMap).forEach(([key, domId]) => {
+        const el = document.getElementById(domId);
+        el.href = p.links[key] || '#';
+        el.style.display = (p.links[key] && p.links[key] !== '#') ? 'inline-flex' : 'none';
+      });
+      
+      // Update counter
+      counterEl.textContent = `${currentProjectIndex + 1} / ${projectIds.length}`;
+    }
+
+    function navigateProject(direction) {
+      currentProjectIndex += direction;
+      
+      // Loop around
+      if (currentProjectIndex < 0) {
+        currentProjectIndex = projectIds.length - 1;
+      } else if (currentProjectIndex >= projectIds.length) {
+        currentProjectIndex = 0;
+      }
+      
+      const projectId = projectIds[currentProjectIndex];
+      loadProject(projectId);
+      updateNavButtons();
+    }
+
+    function updateNavButtons() {
+      prevBtn.disabled = false;
+      nextBtn.disabled = false;
+    }
+
+    function closeProjectModal() {
+      backdrop.classList.remove('active');
+      modal.close();
+      document.body.style.overflow = '';
+    }
+
+    // Event listeners
+    document.querySelectorAll('.play-btn').forEach(btn => {
+      btn.addEventListener('click', e => openProjectModal(parseInt(e.currentTarget.dataset.project)));
+    });
+    
+    closeBtn.addEventListener('click', closeProjectModal);
+    backdrop.addEventListener('click', closeProjectModal);
+    
+    modal.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeProjectModal();
+      if (e.key === 'ArrowLeft') navigateProject(-1);
+      if (e.key === 'ArrowRight') navigateProject(1);
+    });
+    
+    modal.addEventListener('click', e => {
+      if (e.target === modal) closeProjectModal();
+    });
+
+    // Smooth scroll
+    document.querySelectorAll('nav a, .start-btn[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          document.querySelectorAll('nav a').forEach(l => l.classList.remove('active'));
+          const navLink = document.querySelector(`nav a[href="${this.getAttribute('href')}"]`);
+          if (navLink) navLink.classList.add('active');
+        }
+      });
+    });
+
+    // Contact form
+    document.getElementById('contactForm')?.addEventListener('submit', function(e) {
+      e.preventDefault();
+      alert(`✅ Message from ${document.getElementById('name').value} is ready to send!`);
+      this.reset();
+    });
+
+    // Skill bars animation
+    const skillObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const bar = entry.target.querySelector('.skill-fill');
+          const w = bar.style.width;
+          bar.style.width = '0%';
+          requestAnimationFrame(() => { bar.style.width = w; });
+        }
+      });
+    }, { threshold: 0.3 });
+    document.querySelectorAll('.skills-list li').forEach(li => skillObserver.observe(li));
+  </script>
 </body>
 </html>
